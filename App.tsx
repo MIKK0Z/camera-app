@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 
 import Splash from './components/Splash';
-import Galery from './components/Galery';
+import Galery from './components/Gallery';
 import Camera from './components/Camera';
 
 import { RootStackParamList } from './RootStackParamList';
