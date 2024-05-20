@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, StatusBar } from 'react-native';
 
 import Splash from './components/Splash';
 import Galery from './components/Gallery';
-import Camera from './components/Camera';
+import CameraScreen from './components/CameraScreen';
 
 import { RootStackParamList } from './RootStackParamList';
 
@@ -35,8 +35,15 @@ export default function App() {
 						}}
 					/>
 					<Stack.Screen
-						name='Camera'
-						component={Camera}	
+						name='CameraScreen'
+						component={CameraScreen}
+						options={{
+							headerStyle: {
+								backgroundColor: 'cornflowerblue'
+							},
+							headerTitle: 'Camera',
+							headerTintColor: '#fff',
+						}}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>

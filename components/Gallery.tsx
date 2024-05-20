@@ -4,16 +4,28 @@ import * as MediaLibrary from "expo-media-library";
 import { useIsFocused } from "@react-navigation/native";
 import MyButton from "./MyButton";
 import FotoItem from "./FotoItem";
+import { RootStackParamList } from "../RootStackParamList";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+    RootStackParamList,
+    'Splash'
+>;
+
+type Props = {
+    navigation: ProfileScreenNavigationProp;
+};
 
 type Photo = {
     id: string,
     uri: string,
 }
 
-export default function Galery() {
+export default function Galery({ navigation }: Props) {
     const [photos, setPhotos] = useState(Array<Photo>);
-    const [permissionStatus, setPermissionStatus] = useState('')
+    const [permissionStatus, setPermissionStatus] = useState('');
     const [numColumns, setNumColumns] = useState(5);
+    const [selectedPhotos, setSelectedPhotos] = useState(Array<string>);
 
     const isFocused = useIsFocused()
 
@@ -33,6 +45,14 @@ export default function Galery() {
         setPhotos(_ => fetchedPhotos.assets);
     }
 
+    const selectPhoto = (photo: string) => {
+        setSelectedPhotos(photos => [...photos, photo]);
+    }
+
+    const unSelectPhoto = (photo: string) => {
+        setSelectedPhotos(photos => photos.filter((photoID) => photoID !== photo));
+    }
+
     useEffect(() => {
         if (!isFocused) {
             return;
@@ -42,12 +62,12 @@ export default function Galery() {
 
     return (
         <>
-            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'grey' }}>
+            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'grey' }}>                
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginVertical: 6 }}>
                     <MyButton onPress={() => setNumColumns(prevNum => prevNum === 1 ? 5 : 1)} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
                         <Text>LAYOUT</Text>
                     </MyButton>
-                    <MyButton onPress={() => {}} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
+                    <MyButton onPress={() => navigation.navigate('CameraScreen')} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
                         <Text>CAMERA</Text>
                     </MyButton>
                     <MyButton onPress={() => {}} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
@@ -63,7 +83,7 @@ export default function Galery() {
                             data={photos}
                             keyExtractor={photo => photo.id}
                             renderItem={photo => 
-                                <FotoItem width={`${100 / numColumns}%`} uri={photo.item.uri} id={photo.item.id} numColumns={numColumns} />
+                                <FotoItem width={`${100 / numColumns}%`} uri={photo.item.uri} id={photo.item.id} numColumns={numColumns} selectPhoto={selectPhoto} unSelectPhoto={unSelectPhoto} selectedPhotos={selectedPhotos} />
                             }
                             style={{ width: '100%'}}
                         />
