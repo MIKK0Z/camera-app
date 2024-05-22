@@ -11,7 +11,7 @@ export default function CircleButton({ size, icon, onPress }: Props) {
     return (
         <>
             <View>
-                <Text>asd</Text>
+                <Text style={{ fontFamily: 'Material Icons' }}>search</Text>
             </View>
         </>
     )

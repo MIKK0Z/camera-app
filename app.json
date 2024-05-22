@@ -22,6 +22,19 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugin": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./fonts/material-icons-latin-400-normal.woff2"
+          ]
+        }
+      ]
+    ],
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
