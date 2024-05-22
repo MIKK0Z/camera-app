@@ -2,6 +2,8 @@ import { View, Text } from "react-native";
 import { CameraView, Camera, CameraType } from "expo-camera";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import * as MediaLibrary from "expo-media-library";
+
 import CircleButton from "./CircleButton";
 
 export default function CameraScreen() {
@@ -14,6 +16,23 @@ export default function CameraScreen() {
     const cameraLoad = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
         setPermissionStatus(_ => status);
+    }
+
+    const takePhoto = async () => {
+        try {
+            if (!cameraRef) {
+                return;
+            }
+            const photo = await cameraRef.takePictureAsync();
+
+            if (!photo) {
+                return;
+            }
+
+            await MediaLibrary.createAssetAsync(photo.uri);
+        } catch (_error) {
+            console.log('xd');   
+        }
     }
     
     useEffect(() => {
@@ -34,8 +53,7 @@ export default function CameraScreen() {
                             ref={ref => setCameraRef(ref)}
                         >
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16 }}>
-                                <Text>{facing}</Text>
-                                <CircleButton size={48} icon="photo_camera" onPress={() => 0} />
+                                <CircleButton size={48} icon="photo_camera" onPress={takePhoto} />
                                 <CircleButton size={48} icon="cameraswitch" onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')} />
                             </View>
                         </CameraView>

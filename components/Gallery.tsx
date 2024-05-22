@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import { View, FlatList, Text } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { useIsFocused } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import MyButton from "./MyButton";
 import FotoItem from "./FotoItem";
 import { RootStackParamList } from "../RootStackParamList";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-type ProfileScreenNavigationProp = NativeStackNavigationProp<
-    RootStackParamList,
-    'Splash'
->;
+type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Gallery'>;
 
 type Props = {
     navigation: ProfileScreenNavigationProp;
@@ -21,7 +19,7 @@ type Photo = {
     uri: string,
 }
 
-export default function Galery({ navigation }: Props) {
+export default function Gallery({ navigation }: Props) {
     const [photos, setPhotos] = useState(Array<Photo>);
     const [permissionStatus, setPermissionStatus] = useState('');
     const [numColumns, setNumColumns] = useState(5);
@@ -54,6 +52,10 @@ export default function Galery({ navigation }: Props) {
         setSelectedPhotos(photos => photos.filter((photoID) => photoID !== photo));
     }
 
+    const showBigPhoto = (uri: string, id: string) => {
+        navigation.navigate('BigPhoto', { uri, id });
+    }
+
     useEffect(() => {
         if (!isFocused) {
             return;
@@ -84,7 +86,16 @@ export default function Galery({ navigation }: Props) {
                             data={photos}
                             keyExtractor={photo => photo.id}
                             renderItem={photo => 
-                                <FotoItem width={`${100 / numColumns}%`} uri={photo.item.uri} id={photo.item.id} numColumns={numColumns} selectPhoto={selectPhoto} unSelectPhoto={unSelectPhoto} selectedPhotos={selectedPhotos} />
+                                <FotoItem
+                                    width={`${100 / numColumns}%`}
+                                    uri={photo.item.uri}
+                                    id={photo.item.id}
+                                    numColumns={numColumns}
+                                    selectPhoto={selectPhoto}
+                                    unSelectPhoto={unSelectPhoto}
+                                    selectedPhotos={selectedPhotos}
+                                    navigate={showBigPhoto}
+                                />
                             }
                             style={{ width: '100%'}}
                         />

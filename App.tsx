@@ -4,7 +4,8 @@ import { StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 
 import Splash from './components/Splash';
-import Galery from './components/Gallery';
+import Gallery from './components/Gallery';
+import BigPhoto from './components/BigPhoto';
 import CameraScreen from './components/CameraScreen';
 
 import { RootStackParamList } from './RootStackParamList';
@@ -29,8 +30,8 @@ export default function App() {
 						}}
 					/>
 					<Stack.Screen
-						name='Galery'
-						component={Galery}
+						name='Gallery'
+						component={Gallery}
 						options={{
 							headerStyle: {
 								backgroundColor: 'cornflowerblue'
@@ -47,6 +48,17 @@ export default function App() {
 								backgroundColor: 'cornflowerblue'
 							},
 							headerTitle: 'Camera',
+							headerTintColor: '#fff',
+						}}
+					/>
+					<Stack.Screen
+						name='BigPhoto'
+						component={BigPhoto}
+						options={{
+							headerStyle: {
+								backgroundColor: 'cornflowerblue'
+							},
+							headerTitle: 'Selected Photo',
 							headerTintColor: '#fff',
 						}}
 					/>

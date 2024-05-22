@@ -8,9 +8,10 @@ type Props = {
     selectPhoto: (Photo: string) => void,
     unSelectPhoto: (Photo: string) => void,
     selectedPhotos: Array<string>,
+    navigate: (uri: string, id: string) => void,
 }
 
-export default function FotoItem({ width, uri, id, numColumns, selectPhoto, unSelectPhoto, selectedPhotos }: Props) {
+export default function FotoItem({ width, uri, id, numColumns, selectPhoto, unSelectPhoto, selectedPhotos, navigate }: Props) {
     return (
         <TouchableOpacity
             style={{ width, padding: 4 }}
@@ -21,6 +22,7 @@ export default function FotoItem({ width, uri, id, numColumns, selectPhoto, unSe
                     unSelectPhoto(id);
                 }
             }}
+            onPress={() => navigate(uri, id)}
         >
             <Image
                 resizeMode="cover"
