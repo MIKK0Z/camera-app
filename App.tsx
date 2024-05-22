@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
+import { useFonts } from 'expo-font';
 
 import Splash from './components/Splash';
 import Galery from './components/Gallery';
@@ -11,6 +12,10 @@ import { RootStackParamList } from './RootStackParamList';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+	const [_fontsLoaded] = useFonts({
+		'Material-Icons': require('./assets/fonts/material-icons-latin-400-normal.ttf'),
+	});
+
 	return (
 		<>
 			<StatusBar />

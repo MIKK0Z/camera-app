@@ -1,18 +1,18 @@
-import { View, Text } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 
 type Props = {
     size: number,
     icon: string,
-    onPress: () => {},
+    onPress: () => void,
 }
 
 export default function CircleButton({ size, icon, onPress }: Props) {
 
     return (
         <>
-            <View>
-                <Text style={{ fontFamily: 'Material Icons' }}>search</Text>
-            </View>
+            <TouchableOpacity style={{ backgroundColor: 'rgba(0, 0, 0, .5)', padding: 32, borderRadius: 9999 }}>
+                <Text style={{ fontFamily: 'Material-Icons', fontSize: size }}>{icon}</Text>
+            </TouchableOpacity>
         </>
     )
 }

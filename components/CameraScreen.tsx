@@ -34,8 +34,9 @@ export default function CameraScreen() {
                             ref={ref => setCameraRef(ref)}
                         >
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16 }}>
-                                <CircleButton size={32} icon="asdasd" onPress={() => 0} />
-                                <CircleButton size={32} icon="asdasd" onPress={() => 0} />
+                                <Text>{facing}</Text>
+                                <CircleButton size={48} icon="photo_camera" onPress={() => 0} />
+                                <CircleButton size={48} icon="cameraswitch" onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')} />
                             </View>
                         </CameraView>
                     :

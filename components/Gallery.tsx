@@ -40,6 +40,7 @@ export default function Galery({ navigation }: Props) {
         const fetchedPhotos = await MediaLibrary.getAssetsAsync({
             first: 100,
             mediaType: 'photo',
+            sortBy: 'creationTime',
         })
 
         setPhotos(_ => fetchedPhotos.assets);
