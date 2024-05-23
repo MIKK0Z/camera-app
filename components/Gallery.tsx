@@ -40,9 +40,9 @@ export default function Gallery({ navigation }: Props) {
             return;
         }
 
-        let album = await MediaLibrary.getAlbumAsync('expo');
+        const album = await MediaLibrary.getAlbumAsync('expo');
         if (!album) {
-            album = await MediaLibrary.createAlbumAsync('expo');
+            return;
         }
 
         const fetchedPhotos = await MediaLibrary.getAssetsAsync({

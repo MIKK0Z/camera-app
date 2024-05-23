@@ -33,7 +33,7 @@ export default function CameraScreen() {
 
             let album = await MediaLibrary.getAlbumAsync('expo');
             if (!album) {
-                album = await MediaLibrary.createAlbumAsync('expo');
+                return;
             }
 
             const asset = await MediaLibrary.createAssetAsync(photo.uri);
@@ -64,6 +64,8 @@ export default function CameraScreen() {
                             style={{ flex: 1, width: '100%', display: 'flex', justifyContent: 'flex-end' }}
                             facing={facing}
                             ref={ref => setCameraRef(ref)}
+                            flash='off'
+                            zoom={0.9}
                         >
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16, alignItems: 'center' }}>
                                 <CircleButton size={24} icon="cameraswitch" onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')} />
