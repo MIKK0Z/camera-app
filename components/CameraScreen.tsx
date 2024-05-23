@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 
 import CircleButton from "./CircleButton";
+import Settings from "./Settings";
 
 export default function CameraScreen() {
     const [permissionStatus, setPermissionStatus] = useState('');
     const [facing, setFacing] = useState<CameraType>('back');
-    const [cameraRef, setCameraRef] = useState<CameraView | null>()
+    const [cameraRef, setCameraRef] = useState<CameraView | null>();
+    const [isSettingsOpen, setSettingsOpen] = useState(false);
 
     const isFocused = useIsFocused()
 
@@ -29,12 +31,23 @@ export default function CameraScreen() {
                 return;
             }
 
-            await MediaLibrary.createAssetAsync(photo.uri);
+            let album = await MediaLibrary.getAlbumAsync('expo');
+            if (!album) {
+                album = await MediaLibrary.createAlbumAsync('expo');
+            }
+
+            const asset = await MediaLibrary.createAssetAsync(photo.uri);
+
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
         } catch (_error) {
-            console.log('xd');   
+            console.log('xd');
         }
     }
-    
+
+    const toggleSettings = () => {
+        setSettingsOpen(prev => !prev);
+    }
+
     useEffect(() => {
         if (!isFocused) {
             return;
@@ -52,16 +65,18 @@ export default function CameraScreen() {
                             facing={facing}
                             ref={ref => setCameraRef(ref)}
                         >
-                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16 }}>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16, alignItems: 'center' }}>
+                                <CircleButton size={24} icon="cameraswitch" onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')} />
                                 <CircleButton size={48} icon="photo_camera" onPress={takePhoto} />
-                                <CircleButton size={48} icon="cameraswitch" onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')} />
+                                <CircleButton size={24} icon="settings" onPress={toggleSettings} />
                             </View>
                         </CameraView>
-                    :
+                        :
                         <Text>No camera permission</Text>
                 }
-                
+
             </View>
+            <Settings isOpen={isSettingsOpen} />
         </>
     )
 }

@@ -36,7 +36,7 @@ export default function App() {
 							headerStyle: {
 								backgroundColor: 'cornflowerblue'
 							},
-							headerTitle: 'DCIM',
+							headerTitle: 'Gallery',
 							headerTintColor: '#fff',
 						}}
 					/>

@@ -24,8 +24,13 @@ export default function Gallery({ navigation }: Props) {
     const [permissionStatus, setPermissionStatus] = useState('');
     const [numColumns, setNumColumns] = useState(5);
     const [selectedPhotos, setSelectedPhotos] = useState(Array<string>);
+    const [refresher, refreshTrigger] = useState(false);
 
     const isFocused = useIsFocused()
+
+    const refresh = () => {
+        refreshTrigger(prev => !prev)
+    }
 
     const loadPhotos = async () => {
         const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -35,7 +40,13 @@ export default function Gallery({ navigation }: Props) {
             return;
         }
 
+        let album = await MediaLibrary.getAlbumAsync('expo');
+        if (!album) {
+            album = await MediaLibrary.createAlbumAsync('expo');
+        }
+
         const fetchedPhotos = await MediaLibrary.getAssetsAsync({
+            album,
             first: 100,
             mediaType: 'photo',
             sortBy: 'creationTime',
@@ -56,16 +67,22 @@ export default function Gallery({ navigation }: Props) {
         navigation.navigate('BigPhoto', { uri, id });
     }
 
+    const deleteSelected = async () => {
+        await MediaLibrary.deleteAssetsAsync(selectedPhotos);
+        setSelectedPhotos(_ => []);
+        refresh();
+    }
+
     useEffect(() => {
         if (!isFocused) {
             return;
         }
         loadPhotos();
-    }, [isFocused])
+    }, [isFocused, refresher])
 
     return (
         <>
-            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'grey' }}>                
+            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'grey' }}>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginVertical: 6 }}>
                     <MyButton onPress={() => setNumColumns(prevNum => prevNum === 1 ? 5 : 1)} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
                         <Text>LAYOUT</Text>
@@ -73,11 +90,11 @@ export default function Gallery({ navigation }: Props) {
                     <MyButton onPress={() => navigation.navigate('CameraScreen')} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
                         <Text>CAMERA</Text>
                     </MyButton>
-                    <MyButton onPress={() => {}} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
+                    <MyButton onPress={deleteSelected} color="white" fontSize={20} fontWeight={600} backgroundColor="cornflowerblue">
                         <Text>DELETE</Text>
                     </MyButton>
                 </View>
-                
+
                 {
                     permissionStatus === 'granted' ?
                         <FlatList
@@ -85,7 +102,7 @@ export default function Gallery({ navigation }: Props) {
                             key={numColumns}
                             data={photos}
                             keyExtractor={photo => photo.id}
-                            renderItem={photo => 
+                            renderItem={photo =>
                                 <FotoItem
                                     width={`${100 / numColumns}%`}
                                     uri={photo.item.uri}
@@ -97,12 +114,12 @@ export default function Gallery({ navigation }: Props) {
                                     navigate={showBigPhoto}
                                 />
                             }
-                            style={{ width: '100%'}}
+                            style={{ width: '100%' }}
                         />
-                    :
+                        :
                         <Text style={{ fontSize: 32 }}>No permission to use DCIM</Text>
                 }
-                
+
             </View>
         </>
     )
