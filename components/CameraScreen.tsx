@@ -9,6 +9,7 @@ import Settings from "./Settings";
 
 export default function CameraScreen() {
     const [permissionStatus, setPermissionStatus] = useState('');
+    const [nieMaFolderu, setNieMaFolderu] = useState(false);
     const [facing, setFacing] = useState<CameraType>('back');
     const [cameraRef, setCameraRef] = useState<CameraView | null>();
     const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -33,6 +34,7 @@ export default function CameraScreen() {
 
             let album = await MediaLibrary.getAlbumAsync('expo');
             if (!album) {
+                setNieMaFolderu(_ => true);
                 return;
             }
 
@@ -59,7 +61,7 @@ export default function CameraScreen() {
         <>
             <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 {
-                    permissionStatus === 'granted' ?
+                    permissionStatus === 'granted' && !nieMaFolderu ?
                         <CameraView
                             style={{ flex: 1, width: '100%', display: 'flex', justifyContent: 'flex-end' }}
                             facing={facing}
@@ -74,7 +76,10 @@ export default function CameraScreen() {
                             </View>
                         </CameraView>
                         :
-                        <Text>No camera permission</Text>
+                        nieMaFolderu ?
+                            <Text>Nie ma folderu</Text>
+                            :
+                            <Text>No camera permission</Text>
                 }
 
             </View>
