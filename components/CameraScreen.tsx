@@ -14,7 +14,13 @@ export default function CameraScreen() {
     const [cameraRef, setCameraRef] = useState<CameraView | null>();
     const [isSettingsOpen, setSettingsOpen] = useState(false);
 
+    const [sizes, setSizes] = useState([]);
+
     const isFocused = useIsFocused()
+
+
+
+
 
     const cameraLoad = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();

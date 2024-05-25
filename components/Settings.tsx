@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { ScrollView, Text, Animated, View, Button } from "react-native";
+import { Animated, View } from "react-native";
+
+import RadionGroup from './RadioGroup';
 
 const HIDDEN_POS = -500;
 const SHOW_POS = 0;
@@ -40,69 +42,15 @@ export default function Settings({ isOpen }: Props) {
                         ]
                     }]}
             >
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
-                <Text>ANIMATE ME!</Text>
+                <RadionGroup
+                    groupTitle='title test'
+                    options={['opt1', 'opt2', 'opt3', 'opt4']}
+                />
+
+                <RadionGroup
+                    groupTitle='title test'
+                    options={['opt1', 'opt2', 'opt3', 'opt4']}
+                />
             </Animated.ScrollView>
         </View>
     )
