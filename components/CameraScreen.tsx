@@ -14,7 +14,8 @@ export default function CameraScreen() {
     const [cameraRef, setCameraRef] = useState<CameraView | null>();
     const [isSettingsOpen, setSettingsOpen] = useState(false);
 
-    const [sizes, setSizes] = useState([]);
+    const [sizes, setSizes] = useState<Array<string>>([]);
+    const [size, setSize] = useState('');
 
     const isFocused = useIsFocused()
 
@@ -63,6 +64,12 @@ export default function CameraScreen() {
         cameraLoad();
     }, [isFocused])
 
+    useEffect(() => {
+        if (size === '') {
+            setSize(_ => sizes[0])
+        }
+    }, [sizes])
+
     return (
         <>
             <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -73,9 +80,15 @@ export default function CameraScreen() {
                             facing={facing}
                             ref={ref => setCameraRef(ref)}
                             flash='off'
-                            zoom={0.9}
+                            pictureSize={size}
+                            onCameraReady={async () => {
+                                console.log(); // bez tego sie odpala po zamknieciu aparatu
+                                const availibleSizes = await cameraRef?.getAvailablePictureSizesAsync();
+                                setSizes(_ => availibleSizes ?? []);
+                            }}
                         >
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16, alignItems: 'center' }}>
+                                <Text>{size}</Text>
                                 <CircleButton size={24} icon="cameraswitch" onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')} />
                                 <CircleButton size={48} icon="photo_camera" onPress={takePhoto} />
                                 <CircleButton size={24} icon="settings" onPress={toggleSettings} />
@@ -89,7 +102,7 @@ export default function CameraScreen() {
                 }
 
             </View>
-            <Settings isOpen={isSettingsOpen} />
+            <Settings isOpen={isSettingsOpen} sizes={sizes} size={size} setSize={setSize} />
         </>
     )
 }

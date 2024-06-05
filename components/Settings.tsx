@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Animated, View } from "react-native";
+import type { SetStateAction, Dispatch } from "react";
 
 import RadionGroup from './RadioGroup';
 
@@ -8,9 +9,12 @@ const SHOW_POS = 0;
 
 type Props = {
     isOpen: boolean,
+    sizes: Array<string>,
+    size: string,
+    setSize: Dispatch<SetStateAction<string>>,
 }
 
-export default function Settings({ isOpen }: Props) {
+export default function Settings({ isOpen, sizes, setSize, size }: Props) {
     const [currPos, _setCurrPos] = useState(new Animated.Value(HIDDEN_POS));
 
     const toggle = () => {
@@ -43,13 +47,10 @@ export default function Settings({ isOpen }: Props) {
                     }]}
             >
                 <RadionGroup
-                    groupTitle='title test'
-                    options={['opt1', 'opt2', 'opt3', 'opt4']}
-                />
-
-                <RadionGroup
-                    groupTitle='title test'
-                    options={['opt1', 'opt2', 'opt3', 'opt4']}
+                    groupTitle={'pictureSize'}
+                    options={sizes}
+                    value={size}
+                    setValue={setSize}
                 />
             </Animated.ScrollView>
         </View>
