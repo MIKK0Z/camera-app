@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { CameraView, Camera, CameraType } from "expo-camera";
+import { Camera, CameraType, WhiteBalance, FlashMode } from "expo-camera/legacy";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
@@ -10,12 +10,24 @@ import Settings from "./Settings";
 export default function CameraScreen() {
     const [permissionStatus, setPermissionStatus] = useState('');
     const [nieMaFolderu, setNieMaFolderu] = useState(false);
-    const [facing, setFacing] = useState<CameraType>('back');
-    const [cameraRef, setCameraRef] = useState<CameraView | null>();
+    const [facing, setFacing] = useState(CameraType.back);
+    const [cameraRef, setCameraRef] = useState<Camera | null>();
     const [isSettingsOpen, setSettingsOpen] = useState(false);
 
-    const [sizes, setSizes] = useState<Array<string>>([]);
-    const [size, setSize] = useState('');
+    const [availableWhiteBalances, setAvailableWhiteBalances] = useState<Array<string>>([]);
+    const [whiteBalance, setWhiteBalance] = useState<string>(WhiteBalance.auto)
+
+    const [availableFlashModes, setAvailableFlashModes] = useState<Array<string>>([]);
+    const [flashMode, setFlashMode] = useState<string>(FlashMode.off)
+
+    const [availableRatios, setAvailableRatios] = useState<Array<string>>([]);
+    const [ratio, setRatio] = useState<string>('16:9');
+
+    //const [balances, setAvailibleBalances] = useState<Array<{ value: WhiteBalance | number, name: string }>>([])
+    //const [whiteBalance, setWhiteBalance] = useState<{ name: string, value: WhiteBalance | number }>({ name: 'auto', value: WhiteBalance.auto })
+
+    //const [sizes, setSizes] = useState<Array<string>>([]);
+    //const [size, setSize] = useState('');
 
     const isFocused = useIsFocused()
 
@@ -64,36 +76,44 @@ export default function CameraScreen() {
         cameraLoad();
     }, [isFocused])
 
-    useEffect(() => {
-        if (size === '') {
-            setSize(_ => sizes[0])
-        }
-    }, [sizes])
+    //useEffect(() => {
+    //    if (size === '') {
+    //        setSize(_ => sizes[0])
+    //    }
+    //}, [sizes])
 
     return (
         <>
             <View style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 {
                     permissionStatus === 'granted' && !nieMaFolderu ?
-                        <CameraView
+                        <Camera
                             style={{ flex: 1, width: '100%', display: 'flex', justifyContent: 'flex-end' }}
-                            facing={facing}
+                            type={facing}
                             ref={ref => setCameraRef(ref)}
-                            flash='off'
-                            pictureSize={size}
+
+                            whiteBalance={whiteBalance as WhiteBalance}
+                            flashMode={flashMode as FlashMode}
+                            ratio={ratio}
+                            //flash='off'
+                            //pictureSize={size}
                             onCameraReady={async () => {
-                                console.log(); // bez tego sie odpala po zamknieciu aparatu
-                                const availibleSizes = await cameraRef?.getAvailablePictureSizesAsync();
-                                setSizes(_ => availibleSizes ?? []);
+                                console.log('ready'); // bez tego sie odpala po zamknieciu aparatu
+
+                                setAvailableWhiteBalances(_ => Object.keys(Camera.Constants.WhiteBalance))
+                                setAvailableFlashModes(_ => Object.keys(Camera.Constants.FlashMode))
+
+                                const loadedRatios = await cameraRef?.getSupportedRatiosAsync();
+                                setAvailableRatios(_ => loadedRatios ?? ['16:9', '4:3']);
+
                             }}
                         >
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16, alignItems: 'center' }}>
-                                <Text>{size}</Text>
-                                <CircleButton size={24} icon="cameraswitch" onPress={() => setFacing(prev => prev === 'back' ? 'front' : 'back')} />
+                                <CircleButton size={24} icon="cameraswitch" onPress={() => setFacing(prev => prev === CameraType.back ? CameraType.front : CameraType.back)} />
                                 <CircleButton size={48} icon="photo_camera" onPress={takePhoto} />
                                 <CircleButton size={24} icon="settings" onPress={toggleSettings} />
                             </View>
-                        </CameraView>
+                        </Camera>
                         :
                         nieMaFolderu ?
                             <Text>Nie ma folderu</Text>
@@ -102,7 +122,24 @@ export default function CameraScreen() {
                 }
 
             </View>
-            <Settings isOpen={isSettingsOpen} sizes={sizes} size={size} setSize={setSize} />
+            <Settings
+                isOpen={isSettingsOpen}
+                options={[
+                    {
+                        groupTitle: 'White balance',
+                        availableOptions: availableWhiteBalances,
+                        selectedOption: whiteBalance,
+                        setOption: setWhiteBalance,
+                    }, {
+                        groupTitle: 'Flash mode',
+                        availableOptions: availableFlashModes,
+                        selectedOption: flashMode,
+                        setOption: setFlashMode,
+                    }, {
+                        groupTitle: 'Ratio'
+                    }
+                ]}
+            />
         </>
     )
 }

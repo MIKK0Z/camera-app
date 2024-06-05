@@ -7,7 +7,7 @@ type Props = {
     groupTitle: string,
     options: Array<string>,
     value: string,
-    setValue: Dispatch<SetStateAction<string>>,
+    setValue: Dispatch<SetStateAction<any>>,
 }
 
 export default function RadionGroup({ groupTitle, options, setValue, value }: Props) {

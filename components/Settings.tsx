@@ -9,12 +9,18 @@ const SHOW_POS = 0;
 
 type Props = {
     isOpen: boolean,
-    sizes: Array<string>,
-    size: string,
-    setSize: Dispatch<SetStateAction<string>>,
+
+    options: Array<
+        {
+            groupTitle: string,
+            availableOptions: Array<string>,
+            selectedOption: string,
+            setOption: Dispatch<SetStateAction<string>>
+        }
+    >
 }
 
-export default function Settings({ isOpen, sizes, setSize, size }: Props) {
+export default function Settings({ isOpen, options }: Props) {
     const [currPos, _setCurrPos] = useState(new Animated.Value(HIDDEN_POS));
 
     const toggle = () => {
@@ -46,12 +52,18 @@ export default function Settings({ isOpen, sizes, setSize, size }: Props) {
                         ]
                     }]}
             >
-                <RadionGroup
-                    groupTitle={'pictureSize'}
-                    options={sizes}
-                    value={size}
-                    setValue={setSize}
-                />
+
+                {
+                    options.map(({ groupTitle, availableOptions, selectedOption, setOption }, i) =>
+                        <RadionGroup
+                            key={i}
+                            groupTitle={groupTitle}
+                            options={availableOptions}
+                            value={selectedOption}
+                            setValue={setOption}
+                        />
+                    )
+                }
             </Animated.ScrollView>
         </View>
     )
