@@ -21,19 +21,15 @@ export default function CameraScreen() {
     const [flashMode, setFlashMode] = useState<string>(FlashMode.off)
 
     const [availableRatios, setAvailableRatios] = useState<Array<string>>([]);
-    const [ratio, setRatio] = useState<string>('16:9');
+    const [ratio, setRatio] = useState<string>('');
 
-    //const [balances, setAvailibleBalances] = useState<Array<{ value: WhiteBalance | number, name: string }>>([])
-    //const [whiteBalance, setWhiteBalance] = useState<{ name: string, value: WhiteBalance | number }>({ name: 'auto', value: WhiteBalance.auto })
+    const [availablePictureSizes, setAvailablePictureSizes] = useState<Array<string>>([]);
+    const [pictureSize, setPictureSize] = useState<string>('');
 
-    //const [sizes, setSizes] = useState<Array<string>>([]);
-    //const [size, setSize] = useState('');
+    const [width, setWidth] = useState<number>(0);
+    const [height, setHeight] = useState<number>(0);
 
     const isFocused = useIsFocused()
-
-
-
-
 
     const cameraLoad = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
@@ -69,6 +65,11 @@ export default function CameraScreen() {
         setSettingsOpen(prev => !prev);
     }
 
+    const getAndSetAvailablePictureSizes = async () => {
+        const loadedPictureSizes = await cameraRef?.getAvailablePictureSizesAsync(ratio);
+        setAvailablePictureSizes(_ => loadedPictureSizes ?? ['1080x1080', '3472x3472']);
+    }
+
     useEffect(() => {
         if (!isFocused) {
             return;
@@ -76,11 +77,17 @@ export default function CameraScreen() {
         cameraLoad();
     }, [isFocused])
 
-    //useEffect(() => {
-    //    if (size === '') {
-    //        setSize(_ => sizes[0])
-    //    }
-    //}, [sizes])
+    useEffect(() => {
+        setRatio(_ => availableRatios[0] ?? '1:1');
+    }, [availableRatios])
+
+    useEffect(() => {
+        getAndSetAvailablePictureSizes();
+    }, [ratio])
+
+    useEffect(() => {
+        setPictureSize(_ => availablePictureSizes[0] ?? '1080x1080');
+    }, [availablePictureSizes])
 
     return (
         <>
@@ -95,8 +102,8 @@ export default function CameraScreen() {
                             whiteBalance={whiteBalance as WhiteBalance}
                             flashMode={flashMode as FlashMode}
                             ratio={ratio}
-                            //flash='off'
-                            //pictureSize={size}
+                            pictureSize={pictureSize}
+
                             onCameraReady={async () => {
                                 console.log('ready'); // bez tego sie odpala po zamknieciu aparatu
 
@@ -105,7 +112,6 @@ export default function CameraScreen() {
 
                                 const loadedRatios = await cameraRef?.getSupportedRatiosAsync();
                                 setAvailableRatios(_ => loadedRatios ?? ['16:9', '4:3']);
-
                             }}
                         >
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16, alignItems: 'center' }}>
@@ -136,7 +142,15 @@ export default function CameraScreen() {
                         selectedOption: flashMode,
                         setOption: setFlashMode,
                     }, {
-                        groupTitle: 'Ratio'
+                        groupTitle: 'Ratio',
+                        availableOptions: availableRatios,
+                        selectedOption: ratio,
+                        setOption: setRatio,
+                    }, {
+                        groupTitle: 'Picture size',
+                        availableOptions: availablePictureSizes,
+                        selectedOption: pictureSize,
+                        setOption: setPictureSize,
                     }
                 ]}
             />
